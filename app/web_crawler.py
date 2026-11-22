@@ -84,11 +84,34 @@ def extract_content(html: str | BeautifulSoup) -> tuple[str, str]:
     for tag in soup.find_all(_is_chrome):
         tag.decompose()
 
+    _flatten_cards(soup)
+
     # Prefer the <main> element(s); fall back to <body>.
     mains = soup.find_all("main")
     roots = mains or [soup.body or soup]
     text = "\n".join(root.get_text("\n") for root in roots)
     return title, clean_lines(text)
+
+
+CARD_TAGS = ["article", "li", "tr"]
+MAX_CARD_CHARS = 400
+
+
+def _flatten_cards(soup: BeautifulSoup) -> None:
+    """Put each short card (course tile, list item, table row) on a single line.
+
+    Cards list several short facts (name, school, certificate, duration) as separate lines.
+    Flattened, a card's last line sits right next to the next card's first line, so it is
+    easy to attach a fact to the wrong card. Joining each card into one line keeps them apart.
+    """
+    for card in reversed(soup.find_all(CARD_TAGS)):  # innermost cards first
+        parts = [re.sub(r"\s+", " ", s).strip() for s in card.stripped_strings]
+        parts = [p for p in parts if p]
+        line = " · ".join(parts)
+        if 1 < len(parts) and len(line) <= MAX_CARD_CHARS:
+            replacement = soup.new_tag("p")
+            replacement.string = line
+            card.replace_with(replacement)
 
 
 def clean_lines(text: str) -> str:

@@ -43,6 +43,19 @@ def test_extract_content_keeps_main_content_and_drops_chrome():
         assert chrome not in text
 
 
+def test_extract_content_keeps_each_card_on_one_line():
+    html = """<html><body><main>
+      <article><h3>Cloud &amp; DevOps</h3><p>Certificate of completion</p><span>7 months</span></article>
+      <article><h3>Fullstack Web Development</h3><p>NQF Level 4</p><span>6 months</span></article>
+      <ul><li>Short item</li></ul>
+    </main></body></html>"""
+    _, text = extract_content(html)
+    lines = text.splitlines()
+    assert "Cloud & DevOps · Certificate of completion · 7 months" in lines
+    assert "Fullstack Web Development · NQF Level 4 · 6 months" in lines
+    assert "Short item" in lines  # single-part items are left alone
+
+
 def test_clean_lines_drops_tiny_fragments():
     assert clean_lines("  a \n\nHello   world\n⁠\nok\n") == "Hello world"
 
