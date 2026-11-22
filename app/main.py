@@ -1,4 +1,4 @@
-"""Part 3 + 5: FastAPI service exposing POST /ask with JSON in and JSON out (n8n ready)."""
+"""FastAPI service exposing POST /ask over the handbook + website knowledge base (n8n ready)."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 class AskRequest(BaseModel):
-    question: str = Field(..., max_length=1000, examples=["What is the attendance requirement?"])
+    question: str = Field(..., max_length=1000, examples=["What courses does ZAIO offer?"])
 
     @field_validator("question")
     @classmethod
@@ -33,7 +33,11 @@ class AskRequest(BaseModel):
 
 class AskResponse(BaseModel):
     answer: str
-    source: str | None = Field(None, examples=["Page 12"])
+    source: str | None = Field(
+        None, description="Most appropriate source: a ZAIO URL or 'Student Handbook - Page N'",
+        examples=["https://www.zaio.io/programmes", "Student Handbook - Page 18"],
+    )
+    sources: list[str] = Field(default_factory=list, description="Every source the answer used")
     found: bool
 
 
@@ -43,19 +47,23 @@ class ErrorResponse(BaseModel):
 
 
 def build_default_pipeline() -> RAGPipeline:
-    """Wire up the real components and ingest the handbook if the index is empty."""
+    """Wire up the real components and build the knowledge base if the index is empty."""
     from app.embeddings import SentenceTransformerEmbedder
     from app.llm import GeminiLLM
-    from app.rag import ingest_handbook
+    from app.rag import build_knowledge_base, load_or_crawl_website
     from app.vector_store import VectorStore
 
     settings = get_settings()
     embedder = SentenceTransformerEmbedder(settings.embedding_model)
     store = VectorStore(settings.chroma_dir, settings.collection_name)
     if store.count() == 0:
-        logger.info("Vector store is empty, ingesting %s", settings.handbook_path)
-        ingest_handbook(
-            settings.handbook_path, embedder, store, settings.chunk_size, settings.chunk_overlap
+        logger.info("Vector store is empty, building the knowledge base")
+        web_pages = load_or_crawl_website(
+            settings.website_snapshot, settings.website_url, settings.website_max_pages
+        )
+        build_knowledge_base(
+            settings.handbook_path, web_pages, embedder, store,
+            settings.chunk_size, settings.chunk_overlap,
         )
     llm = GeminiLLM(settings.gemini_api_key, settings.gemini_model)
     return RAGPipeline(embedder, store, llm, settings.top_k, settings.min_similarity)
@@ -68,8 +76,8 @@ def create_app(pipeline: RAGPipeline | None = None) -> FastAPI:
         yield
 
     app = FastAPI(
-        title="Handbook RAG Assistant",
-        description="Answers student questions using the bootcamp handbook.",
+        title="ZAIO Knowledge Assistant",
+        description="Answers questions using the ZAIO Student Handbook and the ZAIO website.",
         version="1.0.0",
         lifespan=lifespan,
     )
@@ -98,7 +106,8 @@ def create_app(pipeline: RAGPipeline | None = None) -> FastAPI:
 
     @app.get("/health")
     async def health(request: Request):
-        return {"status": "ok", "chunks": request.app.state.pipeline.store.count()}
+        store = request.app.state.pipeline.store
+        return {"status": "ok", "chunks": store.count(), "by_source": store.count_by_source()}
 
     @app.post(
         "/ask",
@@ -115,7 +124,9 @@ def create_app(pipeline: RAGPipeline | None = None) -> FastAPI:
                 content=ErrorResponse(error="The language model is unavailable",
                                       details=[str(exc)]).model_dump(),
             )
-        return AskResponse(answer=result.answer, source=result.source, found=result.found)
+        return AskResponse(
+            answer=result.answer, source=result.source, sources=result.sources, found=result.found
+        )
 
     return app
 

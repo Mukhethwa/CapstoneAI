@@ -1,4 +1,4 @@
-"""Answer generation with Google Gemini, grounded only in retrieved handbook context."""
+"""Answer generation with Google Gemini, grounded only in the retrieved knowledge-base context."""
 
 from __future__ import annotations
 
@@ -11,13 +11,15 @@ from pydantic import BaseModel
 
 from app.vector_store import RetrievedChunk
 
-SYSTEM_PROMPT = """You are a helpful assistant for students of the Zaio Full-Stack AI Engineer Bootcamp.
-Answer the student's question using ONLY the handbook excerpts provided.
+SYSTEM_PROMPT = """You are a helpful assistant for ZAIO, a South African tech and business institute.
+You answer questions using ONLY the numbered excerpts provided. Excerpts come from two sources:
+the ZAIO Student Handbook (for the Jan 2026 Full-Stack AI Engineer Bootcamp) and the ZAIO website.
 Rules:
-- Do not use outside knowledge and do not guess.
+- Use only facts stated in the excerpts. Do not use outside knowledge and do not guess.
 - If the excerpts do not contain the answer, set "found" to false and leave "answer" empty.
-- Otherwise set "found" to true, answer clearly and concisely, and list in "pages" the page
-  numbers of the excerpts you actually used."""
+- Otherwise set "found" to true and answer clearly and concisely.
+- If the handbook and the website disagree (for example on fees), say which source says what.
+- In "sources" list the numbers of the excerpts you actually used, most important first."""
 
 
 class LLMError(RuntimeError):
@@ -28,7 +30,7 @@ class LLMError(RuntimeError):
 class LLMAnswer:
     found: bool
     answer: str = ""
-    pages: list[int] = field(default_factory=list)
+    sources: list[int] = field(default_factory=list)  # 1-based excerpt numbers
 
 
 class LLM(Protocol):
@@ -38,12 +40,14 @@ class LLM(Protocol):
 class _AnswerSchema(BaseModel):
     found: bool
     answer: str
-    pages: list[int]
+    sources: list[int]
 
 
 def build_prompt(question: str, context: list[RetrievedChunk]) -> str:
-    excerpts = "\n\n".join(f"[Page {c.page}]\n{c.text}" for c in context)
-    return f"Handbook excerpts:\n\n{excerpts}\n\nStudent question: {question}"
+    excerpts = "\n\n".join(
+        f"[{n}] Source: {c.label}\n{c.text}" for n, c in enumerate(context, start=1)
+    )
+    return f"Excerpts:\n\n{excerpts}\n\nQuestion: {question}"
 
 
 def parse_answer(raw: str) -> LLMAnswer:
@@ -55,7 +59,7 @@ def parse_answer(raw: str) -> LLMAnswer:
         data = _AnswerSchema.model_validate(json.loads(text))
     except (ValueError, TypeError) as exc:
         raise LLMError(f"Could not parse model response: {raw[:200]!r}") from exc
-    return LLMAnswer(found=data.found, answer=data.answer.strip(), pages=data.pages)
+    return LLMAnswer(found=data.found, answer=data.answer.strip(), sources=data.sources)
 
 
 RETRYABLE_STATUS = {429, 500, 503}

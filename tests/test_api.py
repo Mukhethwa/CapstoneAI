@@ -19,14 +19,23 @@ def test_ask_returns_answer_and_source(client):
     assert response.headers["content-type"].startswith("application/json")
     body = response.json()
     assert body["found"] is True
-    assert body["source"] == "Page 16"
+    assert body["source"] == "Student Handbook - Page 16"
+    assert body["sources"] == ["Student Handbook - Page 16"]
     assert "R 38,950" in body["answer"]
+
+
+def test_ask_website_question_returns_url_source(client):
+    response = client.post("/ask", json={"question": "What courses and bootcamps does ZAIO offer?"})
+    assert response.status_code == 200
+    assert response.json()["source"] == "https://www.zaio.io/bootcamps"
 
 
 def test_ask_unknown_question_returns_not_found(client):
     response = client.post("/ask", json={"question": "zebra quantum volcano"})
     assert response.status_code == 200
-    assert response.json() == {"answer": NOT_FOUND_MESSAGE, "source": None, "found": False}
+    assert response.json() == {
+        "answer": NOT_FOUND_MESSAGE, "source": None, "sources": [], "found": False
+    }
 
 
 @pytest.mark.parametrize(
@@ -60,7 +69,7 @@ def test_llm_failure_returns_502(embedder, store):
         def generate(self, question, context) -> LLMAnswer:
             raise LLMError("quota exceeded")
 
-    pipeline = RAGPipeline(embedder, store, BrokenLLM(), top_k=2, min_similarity=0.2)
+    pipeline = RAGPipeline(embedder, store, BrokenLLM(), top_k=3, min_similarity=0.2)
     with TestClient(create_app(pipeline)) as client:
         response = client.post("/ask", json={"question": "What are the total fees?"})
     assert response.status_code == 502
@@ -72,7 +81,7 @@ def test_unexpected_error_returns_500_json(embedder, store):
         def generate(self, question, context) -> LLMAnswer:
             raise RuntimeError("boom")
 
-    pipeline = RAGPipeline(embedder, store, CrashingLLM(), top_k=2, min_similarity=0.2)
+    pipeline = RAGPipeline(embedder, store, CrashingLLM(), top_k=3, min_similarity=0.2)
     with TestClient(create_app(pipeline), raise_server_exceptions=False) as client:
         response = client.post("/ask", json={"question": "What are the total fees?"})
     assert response.status_code == 500
@@ -80,4 +89,6 @@ def test_unexpected_error_returns_500_json(embedder, store):
 
 
 def test_health_reports_chunk_count(client):
-    assert client.get("/health").json() == {"status": "ok", "chunks": 3}
+    assert client.get("/health").json() == {
+        "status": "ok", "chunks": 4, "by_source": {"handbook": 2, "website": 2}
+    }
