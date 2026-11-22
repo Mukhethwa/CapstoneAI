@@ -45,6 +45,13 @@ class Settings:
     min_similarity: float = field(default_factory=lambda: float(_env("MIN_SIMILARITY", "0.3")))
     gemini_api_key: str = field(default_factory=lambda: _env("GEMINI_API_KEY", ""))
     gemini_model: str = field(default_factory=lambda: _env("GEMINI_MODEL", "gemini-3.5-flash-lite"))
+    gemini_fallback_models: list[str] = field(
+        default_factory=lambda: [
+            m.strip()
+            for m in _env("GEMINI_FALLBACK_MODELS", "gemini-3.1-flash-lite,gemini-3.5-flash").split(",")
+            if m.strip()
+        ]
+    )
 
 
 def get_settings() -> Settings:

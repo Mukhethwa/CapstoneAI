@@ -65,7 +65,7 @@ def build_default_pipeline() -> RAGPipeline:
             settings.handbook_path, web_pages, embedder, store,
             settings.chunk_size, settings.chunk_overlap,
         )
-    llm = GeminiLLM(settings.gemini_api_key, settings.gemini_model)
+    llm = GeminiLLM(settings.gemini_api_key, settings.gemini_model, settings.gemini_fallback_models)
     return RAGPipeline(embedder, store, llm, settings.top_k, settings.min_similarity)
 
 

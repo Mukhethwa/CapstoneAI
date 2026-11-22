@@ -66,13 +66,17 @@ RETRYABLE_STATUS = {429, 500, 503}
 
 
 class GeminiLLM:
+    """Gemini client with retries and fallback models for temporary overloads."""
+
     def __init__(
         self,
         api_key: str,
         model: str = "gemini-3.5-flash-lite",
-        max_attempts: int = 4,
+        fallback_models: list[str] | None = None,
+        max_attempts: int = 3,
         backoff_seconds: float = 2.0,
     ):
+        self.models = [model] + [m for m in (fallback_models or []) if m and m != model]
         self.max_attempts = max_attempts
         self.backoff_seconds = backoff_seconds
         self._client = None
@@ -80,15 +84,11 @@ class GeminiLLM:
             from google import genai
 
             self._client = genai.Client(api_key=api_key)
-        self._model = model
 
     def generate(self, question: str, context: list[RetrievedChunk]) -> LLMAnswer:
-        from google.genai import types
-
         if self._client is None:
             raise LLMError("GEMINI_API_KEY is not set. Add it to your .env file.")
-
-        from google.genai import errors
+        from google.genai import errors, types
 
         config = types.GenerateContentConfig(
             system_instruction=SYSTEM_PROMPT,
@@ -96,20 +96,26 @@ class GeminiLLM:
             response_mime_type="application/json",
             response_schema=_AnswerSchema,
         )
-        for attempt in range(self.max_attempts):
-            try:
-                response = self._client.models.generate_content(
-                    model=self._model, contents=build_prompt(question, context), config=config
-                )
-                break
-            except errors.APIError as exc:
-                # Retry temporary failures (rate limit / overloaded) with exponential backoff.
-                if exc.code in RETRYABLE_STATUS and attempt < self.max_attempts - 1:
-                    time.sleep(self.backoff_seconds * 2**attempt)
+        prompt = build_prompt(question, context)
+        last_error: Exception | None = None
+        for model in self.models:
+            for attempt in range(self.max_attempts):
+                try:
+                    response = self._client.models.generate_content(
+                        model=model, contents=prompt, config=config
+                    )
+                except errors.APIError as exc:
+                    last_error = exc
+                    if exc.code not in RETRYABLE_STATUS:
+                        raise LLMError(f"Gemini request failed: {exc}") from exc
+                    # Temporary failure (rate limit / overloaded): back off, then retry.
+                    if attempt < self.max_attempts - 1:
+                        time.sleep(self.backoff_seconds * 2**attempt)
                     continue
-                raise LLMError(f"Gemini request failed: {exc}") from exc
-            except Exception as exc:  # network errors etc.
-                raise LLMError(f"Gemini request failed: {exc}") from exc
-        if not response.text:
-            raise LLMError("Gemini returned an empty response")
-        return parse_answer(response.text)
+                except Exception as exc:  # network errors etc.
+                    raise LLMError(f"Gemini request failed: {exc}") from exc
+                if not response.text:
+                    raise LLMError("Gemini returned an empty response")
+                return parse_answer(response.text)
+            # This model stayed unavailable; move on to the next fallback model.
+        raise LLMError(f"Gemini request failed: {last_error}")
