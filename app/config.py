@@ -25,6 +25,13 @@ class Settings:
     handbook_path: Path = field(
         default_factory=lambda: Path(_env("HANDBOOK_PATH", str(PROJECT_ROOT / "data" / "handbook.pdf")))
     )
+    website_url: str = field(default_factory=lambda: _env("WEBSITE_URL", "https://www.zaio.io/"))
+    website_max_pages: int = field(default_factory=lambda: int(_env("WEBSITE_MAX_PAGES", "80")))
+    website_snapshot: Path = field(
+        default_factory=lambda: Path(
+            _env("WEBSITE_SNAPSHOT", str(PROJECT_ROOT / "data" / "website_pages.json"))
+        )
+    )
     chroma_dir: Path = field(
         default_factory=lambda: Path(_env("CHROMA_DIR", str(PROJECT_ROOT / "chroma_db")))
     )
