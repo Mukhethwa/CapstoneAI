@@ -51,6 +51,21 @@ def test_retrieve_keeps_best_matches_from_each_source(embedder):
     assert [c.similarity for c in context] == sorted((c.similarity for c in context), reverse=True)
 
 
+def test_retrieve_limits_chunks_per_page(embedder):
+    from app.document_processor import Chunk
+
+    chunks = [Chunk(id=f"a{i}", source=WEBSITE, url="https://www.zaio.io/a",
+                    text=f"entry requirements certificates {i}") for i in range(5)]
+    chunks.append(Chunk(id="b", source=WEBSITE, url="https://www.zaio.io/b",
+                        text="entry requirements matric"))
+    store = VectorStore(None, collection_name="kb-test-per-page")
+    store.add_chunks(chunks, embedder.embed_documents([c.text for c in chunks]))
+    pipeline = RAGPipeline(embedder, store, FakeLLM(), top_k=4, min_similarity=0.1, max_per_page=2)
+    urls = [c.url for c in pipeline.retrieve("entry requirements certificates")]
+    assert urls.count("https://www.zaio.io/a") == 2
+    assert "https://www.zaio.io/b" in urls
+
+
 def test_retrieve_filters_out_irrelevant_chunks(pipeline):
     assert pipeline.retrieve("zebra quantum volcano") == []
 

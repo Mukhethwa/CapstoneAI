@@ -82,7 +82,9 @@ class RAGPipeline:
         top_k: int = 6,
         min_similarity: float = 0.3,
         per_source: int = 2,
+        max_per_page: int = 2,
     ):
+        self.max_per_page = max_per_page
         self.embedder = embedder
         self.store = store
         self.llm = llm
@@ -97,12 +99,23 @@ class RAGPipeline:
         relevant handbook passages out of the results. Each source is therefore searched on its
         own and the best ``per_source`` matches from every source are always kept (if they pass
         the similarity floor); the remaining slots go to the best matches overall.
+
+        At most ``max_per_page`` chunks come from any one handbook page or web page, so a
+        single page whose title closely matches the question cannot fill every slot.
         """
         query_embedding = self.embedder.embed_query(question)
         ranked: dict[str, list[RetrievedChunk]] = {}
         for source in (HANDBOOK, WEBSITE):
-            hits = self.store.query(query_embedding, self.top_k, source=source)
-            ranked[source] = [h for h in hits if h.similarity >= self.min_similarity]
+            hits = self.store.query(query_embedding, self.top_k * 4, source=source)
+            per_page: dict[str, int] = {}
+            kept = []
+            for hit in hits:
+                if hit.similarity < self.min_similarity:
+                    continue
+                per_page[hit.label] = per_page.get(hit.label, 0) + 1
+                if per_page[hit.label] <= self.max_per_page:
+                    kept.append(hit)
+            ranked[source] = kept
 
         picked = [hit for hits in ranked.values() for hit in hits[: self.per_source]]
         rest = sorted((h for hits in ranked.values() for h in hits if h not in picked),
