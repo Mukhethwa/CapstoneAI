@@ -1,130 +1,440 @@
 [
   {
-    "question": "What are the total fees for the bootcamp?",
-    "topic": "Fees",
-    "expected": "Page 16",
-    "retrieved": "Pages 7, 16, 17, 19",
-    "source": "Page 16",
-    "answer": "The total fees for the bootcamp are R 38,950."
-  },
-  {
-    "question": "When is orientation day?",
-    "topic": "Key dates",
-    "expected": "Page 7",
-    "retrieved": "Pages 7, 8, 9, 18",
-    "source": "Page 7",
-    "answer": "Orientation Day is scheduled for 15 January 2026 at 10 am."
+    "question": "When are the tutor support hours?",
+    "category": "Handbook",
+    "expected": [
+      "Student Handbook - Page 20"
+    ],
+    "retrieved": [
+      "Student Handbook - Page 20",
+      "Student Handbook - Page 11",
+      "https://www.zaio.io/faculty",
+      "Student Handbook - Page 8",
+      "https://www.zaio.io/programmes/fullstack-web-development-bootcamp"
+    ],
+    "source": "Student Handbook - Page 20",
+    "sources": [
+      "Student Handbook - Page 20"
+    ],
+    "answer": "Tutors host support hours every Tuesday from 2 pm to 4 pm and 6 pm to 8 pm, and on Thursdays from 10 am to 12 pm and 6 pm to 8 pm.",
+    "found": true,
+    "passed": true
   },
   {
     "question": "What days and times are the live classes?",
-    "topic": "Live classes",
-    "expected": "Page 11",
-    "retrieved": "Pages 7, 9, 11, 12",
-    "source": "Page 11",
-    "answer": "Live classes are held from 6 pm to 8 pm on Thursdays and from 9 am to 11 am on Tuesdays for the first 12 weeks of the bootcamp, after which they reduce to 1 live class every Tuesday at 9 am - 11 am."
-  },
-  {
-    "question": "How much RAM does my laptop need?",
-    "topic": "Hardware",
-    "expected": "Page 5",
-    "retrieved": "Page 5",
-    "source": "Page 5",
-    "answer": "At least 4 or 8 GB of RAM is required for efficient multitasking and handling of development environments."
-  },
-  {
-    "question": "How much is the final project worth in the final grade?",
-    "topic": "Grading",
-    "expected": "Page 14",
-    "retrieved": "Pages 14, 23",
-    "source": "Page 14",
-    "answer": "The final project is worth 35% of the final grade."
-  },
-  {
-    "question": "When are the tutor support hours?",
-    "topic": "Tutor support",
-    "expected": "Page 20",
-    "retrieved": "Pages 8, 11, 20",
-    "source": "Page 20",
-    "answer": "Tutors host support hours every Tuesday from 2 pm to 4 pm and 6 pm to 8 pm, and on Thursdays from 10 am to 12 pm and 6 pm to 8 pm."
-  },
-  {
-    "question": "Which platform is used for communication after orientation day?",
-    "topic": "Communication",
-    "expected": "Page 18",
-    "retrieved": "Pages 9, 13, 18",
-    "source": "Page 18",
-    "answer": "Discord is used for communication after orientation day."
-  },
-  {
-    "question": "What financing options are available to pay the fees?",
-    "topic": "Fees",
-    "expected": "Pages 16, 17",
-    "retrieved": "Pages 16, 17",
-    "source": "Pages 16, 17",
-    "answer": "The financing options available for paying the fees are through Zaio's partnered financing options with Capitec and Manati to facilitate the process of securing a study loan."
+    "category": "Handbook",
+    "expected": [
+      "Student Handbook - Page 11"
+    ],
+    "retrieved": [
+      "Student Handbook - Page 11",
+      "https://www.zaio.io/intakes",
+      "Student Handbook - Page 12",
+      "https://www.zaio.io/events/class-of-2026-graduation",
+      "https://www.zaio.io/faculty",
+      "Student Handbook - Page 7"
+    ],
+    "source": "Student Handbook - Page 11",
+    "sources": [
+      "Student Handbook - Page 11",
+      "Student Handbook - Page 12"
+    ],
+    "answer": "For the first 12 weeks of the bootcamp, live classes are held from 6 pm to 8 pm on Thursdays and 9 am to 11 am on Tuesdays. After the first 12 weeks, live classes reduce to 1 live class every Tuesday from 9 am to 11 am.",
+    "found": true,
+    "passed": true
   },
   {
     "question": "What does a yellow tile on my calendar mean?",
-    "topic": "Calendar",
-    "expected": "Page 9",
-    "retrieved": "Pages 8, 9",
-    "source": "Page 9",
-    "answer": "A yellow tile indicates late completion, meaning the task was completed after the designated day or more. While not ideal, it serves as a valuable learning opportunity to enhance time management skills."
+    "category": "Handbook",
+    "expected": [
+      "Student Handbook - Page 9"
+    ],
+    "retrieved": [
+      "Student Handbook - Page 9"
+    ],
+    "source": "Student Handbook - Page 9",
+    "sources": [
+      "Student Handbook - Page 9"
+    ],
+    "answer": "A yellow tile indicates late completion, meaning the task was completed after the designated day or more. While not ideal, it serves as a valuable learning opportunity to enhance time management skills.",
+    "found": true,
+    "passed": true
   },
   {
-    "question": "How much do paid internships pay per month?",
-    "topic": "Placement",
-    "expected": "Page 24",
-    "retrieved": "Pages 16, 17, 24, 25",
-    "source": "Page 24",
-    "answer": "Paid internships provide a monthly salary of R4000."
+    "question": "Which platform is used for communication after orientation day?",
+    "category": "Handbook",
+    "expected": [
+      "Student Handbook - Page 18"
+    ],
+    "retrieved": [
+      "Student Handbook - Page 18",
+      "Student Handbook - Page 9"
+    ],
+    "source": "Student Handbook - Page 18",
+    "sources": [
+      "Student Handbook - Page 18"
+    ],
+    "answer": "After orientation day, all ongoing communication transitions to Discord, which serves as the primary platform and central hub for discussions, announcements, and real-time interaction.",
+    "found": true,
+    "passed": true
   },
   {
-    "question": "Who is the lead instructor?",
-    "topic": "Team",
-    "expected": "Page 15",
-    "retrieved": "Pages 2, 13, 15, 20",
-    "source": "Page 15",
-    "answer": "Kago Kola is the lead instructor."
+    "question": "How much is the final project worth in the final grade?",
+    "category": "Handbook",
+    "expected": [
+      "Student Handbook - Page 14"
+    ],
+    "retrieved": [
+      "Student Handbook - Page 14",
+      "https://www.zaio.io/programmes/software-developer-occupational-certificate",
+      "https://www.zaio.io/events/class-of-2026-graduation",
+      "https://www.zaio.io/programmes/graphic-media-designer-occupational-certificate",
+      "Student Handbook - Page 23"
+    ],
+    "source": "Student Handbook - Page 14",
+    "sources": [
+      "Student Handbook - Page 14"
+    ],
+    "answer": "The final project (React + Node) is worth 35% of the final grade.",
+    "found": true,
+    "passed": true
   },
   {
-    "question": "What is the highest level tag on Discord?",
-    "topic": "Discord levels",
-    "expected": "Page 21",
-    "retrieved": "Pages 21, 22",
-    "source": "Page 21",
-    "answer": "The highest level tag in the Code Mentor category is Lvl 30 Code Mentor Pro Max, and the highest level in the Team Player category is Lvl 18 Team Player Ultra Pro Max."
+    "question": "How much RAM does my laptop need for the bootcamp?",
+    "category": "Handbook",
+    "expected": [
+      "Student Handbook - Page 5"
+    ],
+    "retrieved": [
+      "Student Handbook - Page 5",
+      "Student Handbook - Page 1",
+      "https://www.zaio.io/programmes/fullstack-web-development-bootcamp",
+      "https://www.zaio.io/entry-requirements",
+      "https://www.zaio.io/programmes/cybersecurity-bootcamp"
+    ],
+    "source": "Student Handbook - Page 5",
+    "sources": [
+      "Student Handbook - Page 5"
+    ],
+    "answer": "At least 4 or 8 GB of RAM is required for efficient multitasking and handling of development environments.",
+    "found": true,
+    "passed": true
   },
   {
-    "question": "Which technologies are covered in weeks 16 to 20?",
-    "topic": "Sprints",
-    "expected": "Page 6",
-    "retrieved": "Pages 6, 8, 9",
-    "source": "Page 6",
-    "answer": "In weeks 16 to 20, the technologies covered are NodeJS, NPM, Express, REST APIs, MongoDB, Postman, and Async & Await."
+    "question": "What is the highest level tag on the Discord server?",
+    "category": "Handbook",
+    "expected": [
+      "Student Handbook - Page 21"
+    ],
+    "retrieved": [
+      "Student Handbook - Page 22",
+      "Student Handbook - Page 21",
+      "Student Handbook - Page 18",
+      "https://www.zaio.io/community"
+    ],
+    "source": "Student Handbook - Page 21",
+    "sources": [
+      "Student Handbook - Page 21"
+    ],
+    "answer": "The highest level tag in the Code Mentor category is Lvl 30 Code Mentor Pro Max, and the highest level in the Team Player category is Lvl 18 Team Player Ultra Pro Max.",
+    "found": true,
+    "passed": true
   },
   {
-    "question": "What is the attendance requirement?",
-    "topic": "Out of scope",
-    "expected": "Not in handbook",
-    "retrieved": "Pages 7, 11, 12, 15",
-    "source": "N/A",
-    "answer": "I don't know. That information is not available in the handbook."
+    "question": "What courses does ZAIO offer?",
+    "category": "Website",
+    "expected": [
+      "https://www.zaio.io/",
+      "https://www.zaio.io/programmes",
+      "https://www.zaio.io/bootcamps",
+      "https://www.zaio.io/occupational-certificates",
+      "https://www.zaio.io/schools/technology",
+      "https://www.zaio.io/compare",
+      "https://www.zaio.io/2027"
+    ],
+    "retrieved": [
+      "https://www.zaio.io/",
+      "https://www.zaio.io/2027",
+      "https://www.zaio.io/for-corporate",
+      "Student Handbook - Page 4",
+      "Student Handbook - Page 20"
+    ],
+    "source": "https://www.zaio.io/",
+    "sources": [
+      "https://www.zaio.io/",
+      "https://www.zaio.io/2027"
+    ],
+    "answer": "ZAIO offers several accredited tech and business courses and programmes, including Occupational Certificates (such as Software Developer, AI & ML Engineer, Entrepreneurship & Business Management, and Graphic Design & Media) as well as focused, job-skills bootcamps.",
+    "found": true,
+    "passed": true
   },
   {
-    "question": "What is the bootcamp's refund policy?",
-    "topic": "Out of scope",
-    "expected": "Not in handbook",
-    "retrieved": "Pages 7, 11, 16, 17",
-    "source": "N/A",
-    "answer": "I don't know. That information is not available in the handbook."
+    "question": "What is ZAIO's refund policy?",
+    "category": "Website",
+    "expected": [
+      "https://www.zaio.io/refund-policy",
+      "https://www.zaio.io/terms"
+    ],
+    "retrieved": [
+      "https://www.zaio.io/refund-policy",
+      "https://www.zaio.io/terms",
+      "Student Handbook - Page 26",
+      "Student Handbook - Page 17"
+    ],
+    "source": "https://www.zaio.io/refund-policy",
+    "sources": [
+      "https://www.zaio.io/refund-policy",
+      "https://www.zaio.io/terms"
+    ],
+    "answer": "What you can get back depends on your payment plan and timing. You can get a full refund if you cancel in writing before your programme starts (or before orientation on 12-, 18-, 24-month and financed plans). On upfront, two-month and three-month plans, you can get 75% of the invoiced amount within 30 days of the start; nothing is refundable after that. If Zaio cancels your cohort, you can choose a full refund or a free transfer to the next cohort. Cancellations must be sent in writing to accounts@zaio.io.",
+    "found": true,
+    "passed": true
+  },
+  {
+    "question": "When does the next Fullstack AI Engineer bootcamp start?",
+    "category": "Website",
+    "expected": [
+      "https://www.zaio.io/programmes/fullstack-ai-engineer-bootcamp",
+      "https://www.zaio.io/intakes"
+    ],
+    "retrieved": [
+      "https://www.zaio.io/programmes/fullstack-ai-engineer-bootcamp",
+      "Student Handbook - Page 1",
+      "https://www.zaio.io/2027",
+      "Student Handbook - Page 7",
+      "https://www.zaio.io/intakes"
+    ],
+    "source": "https://www.zaio.io/programmes/fullstack-ai-engineer-bootcamp",
+    "sources": [
+      "https://www.zaio.io/programmes/fullstack-ai-engineer-bootcamp",
+      "https://www.zaio.io/2027"
+    ],
+    "answer": "The Fullstack AI Engineer bootcamp starts on 28 January 2027.",
+    "found": true,
+    "passed": true
+  },
+  {
+    "question": "Where are ZAIO's campuses located?",
+    "category": "Website",
+    "expected": [
+      "https://www.zaio.io/about",
+      "https://www.zaio.io/",
+      "https://www.zaio.io/contact",
+      "https://www.zaio.io/locations/cape-town",
+      "https://www.zaio.io/locations/durban",
+      "https://www.zaio.io/2027"
+    ],
+    "retrieved": [
+      "https://www.zaio.io/about",
+      "https://www.zaio.io/events",
+      "https://www.zaio.io/learner-stories",
+      "Student Handbook - Page 20"
+    ],
+    "source": "https://www.zaio.io/about",
+    "sources": [
+      "https://www.zaio.io/about"
+    ],
+    "answer": "Zaio's campuses are located in Cape Town (66 Albert Road, Woodstock) and Durban (221 Musgrave Road, Berea).",
+    "found": true,
+    "passed": true
+  },
+  {
+    "question": "Is ZAIO accredited?",
+    "category": "Website",
+    "expected": [
+      "https://www.zaio.io/accreditation",
+      "https://www.zaio.io/2027/parents"
+    ],
+    "retrieved": [
+      "https://www.zaio.io/2027/parents",
+      "https://www.zaio.io/accreditation",
+      "https://www.zaio.io/",
+      "Student Handbook - Page 26",
+      "Student Handbook - Page 15"
+    ],
+    "source": "https://www.zaio.io/accreditation",
+    "sources": [
+      "https://www.zaio.io/accreditation",
+      "https://www.zaio.io/",
+      "https://www.zaio.io/2027/parents"
+    ],
+    "answer": "Yes, Zaio Institute of Technology is accredited and quality assured by the Quality Council for Trades and Occupations (QCTO) as a Skills Development Provider to offer Occupational Certificates registered on the National Qualifications Framework.",
+    "found": true,
+    "passed": true
+  },
+  {
+    "question": "What are the entry requirements for the occupational certificates?",
+    "category": "Website",
+    "expected": [
+      "https://www.zaio.io/entry-requirements",
+      "https://www.zaio.io/occupational-certificates"
+    ],
+    "retrieved": [
+      "https://www.zaio.io/occupational-certificates",
+      "https://www.zaio.io/entry-requirements",
+      "https://www.zaio.io/2027",
+      "Student Handbook - Page 3"
+    ],
+    "source": "https://www.zaio.io/2027",
+    "sources": [
+      "https://www.zaio.io/2027",
+      "https://www.zaio.io/entry-requirements"
+    ],
+    "answer": "An Occupational Certificate generally asks for matric (an NQF Level 4 qualification) or an equivalent. For some specific courses, the requirements differ: Entrepreneurship & Business Management requires Grade 10 and up (an NQF Level 2 qualification with mathematical literacy and communication or equivalent); AI & ML Engineer requires Grade 12 with English and Mathematical Literacy, or an NQF Level 4 qualification; and Data Science requires an NQF Level 4 qualification (e.g., Matric) or equivalent along with basic mathematics and logical thinking skills. If you do not have matric, Recognition of Prior Learning (work experience or earlier study) can count toward eligibility.",
+    "found": true,
+    "passed": true
+  },
+  {
+    "question": "How do I apply to ZAIO?",
+    "category": "Website",
+    "expected": [
+      "https://www.zaio.io/how-to-apply"
+    ],
+    "retrieved": [
+      "https://www.zaio.io/how-to-apply",
+      "https://www.zaio.io/affiliate",
+      "https://www.zaio.io/terms",
+      "Student Handbook - Page 26",
+      "Student Handbook - Page 10"
+    ],
+    "source": "https://www.zaio.io/how-to-apply",
+    "sources": [
+      "https://www.zaio.io/how-to-apply"
+    ],
+    "answer": "To apply to ZAIO, complete the online application by providing your details, background, and desired programme, which takes about five minutes and requires no documents to start. Afterwards, you will talk to an admissions consultant who will call or message you to confirm the programme, answer questions, and discuss payment. Next, you choose how to pay (in full, over two months, or financed through Manati). Once the consultation is done and tuition is arranged, you will receive your confirmation by email.",
+    "found": true,
+    "passed": true
+  },
+  {
+    "question": "What is The Weekly Commit?",
+    "category": "Website",
+    "expected": [
+      "https://www.zaio.io/newsletter",
+      "https://www.zaio.io/"
+    ],
+    "retrieved": [
+      "https://www.zaio.io/newsletter",
+      "Student Handbook - Page 7",
+      "https://www.zaio.io/intakes"
+    ],
+    "source": "https://www.zaio.io/newsletter",
+    "sources": [
+      "https://www.zaio.io/newsletter"
+    ],
+    "answer": "The Weekly Commit is a free tech career newsletter by Zaio that lands in your inbox every Thursday, featuring practical answers, honest perspectives on tech careers, and a weekly motivational nudge.",
+    "found": true,
+    "passed": true
+  },
+  {
+    "question": "How much does the Fullstack AI Engineer bootcamp cost?",
+    "category": "Both",
+    "expected": [
+      "Student Handbook - Page 16",
+      "https://www.zaio.io/programmes/fullstack-ai-engineer-bootcamp",
+      "https://www.zaio.io/tuition-and-financing"
+    ],
+    "retrieved": [
+      "https://www.zaio.io/programmes/fullstack-ai-engineer-bootcamp",
+      "Student Handbook - Page 1",
+      "https://www.zaio.io/programmes/ai-software-developer-occupational-certificate",
+      "https://www.zaio.io/programmes/cloud-devops-engineering-bootcamp",
+      "Student Handbook - Page 16"
+    ],
+    "source": "Student Handbook - Page 1",
+    "sources": [
+      "Student Handbook - Page 1",
+      "Student Handbook - Page 16",
+      "https://www.zaio.io/programmes/fullstack-ai-engineer-bootcamp"
+    ],
+    "answer": "The Student Handbook states that the total fees for the Full-Stack AI Engineer Bootcamp are R38,950, with an upfront payment option. However, the Zaio website states that the upfront fee is R42,950, which is the lowest total price for this bootcamp, and that you can also pay from R4,178 a month through Manati or in instalments over the programme, both of which cost more in total.",
+    "found": true,
+    "passed": true
+  },
+  {
+    "question": "Which companies can I use to finance my studies?",
+    "category": "Both",
+    "expected": [
+      "Student Handbook - Page 16",
+      "Student Handbook - Page 17",
+      "https://www.zaio.io/tuition-and-financing",
+      "https://www.zaio.io/programmes/fullstack-ai-engineer-bootcamp"
+    ],
+    "retrieved": [
+      "Student Handbook - Page 17",
+      "Student Handbook - Page 16",
+      "https://www.zaio.io/programmes/fullstack-ai-engineer-bootcamp",
+      "https://www.zaio.io/programmes/fullstack-web-development-bootcamp",
+      "https://www.zaio.io/2027"
+    ],
+    "source": "Student Handbook - Page 16",
+    "sources": [
+      "Student Handbook - Page 16",
+      "Student Handbook - Page 17"
+    ],
+    "answer": "You can use Capitec and Manati as financing partners to secure a study loan for the bootcamp.",
+    "found": true,
+    "passed": true
   },
   {
     "question": "What is the capital of France?",
-    "topic": "Out of scope",
-    "expected": "Not in handbook",
-    "retrieved": "none above threshold",
-    "source": "N/A",
-    "answer": "I don't know. That information is not available in the handbook."
+    "category": "Unanswerable",
+    "expected": [
+      "(fallback message)"
+    ],
+    "retrieved": [],
+    "source": null,
+    "sources": [],
+    "answer": "I could not find that information in the available knowledge base.",
+    "found": false,
+    "passed": true
+  },
+  {
+    "question": "Who won the 2022 FIFA World Cup?",
+    "category": "Unanswerable",
+    "expected": [
+      "(fallback message)"
+    ],
+    "retrieved": [],
+    "source": null,
+    "sources": [],
+    "answer": "I could not find that information in the available knowledge base.",
+    "found": false,
+    "passed": true
+  },
+  {
+    "question": "What is the Wi-Fi password at the Cape Town campus?",
+    "category": "Unanswerable",
+    "expected": [
+      "(fallback message)"
+    ],
+    "retrieved": [
+      "https://www.zaio.io/events/zaio-student-connect",
+      "https://www.zaio.io/locations/cape-town",
+      "Student Handbook - Page 7",
+      "Student Handbook - Page 26"
+    ],
+    "source": null,
+    "sources": [],
+    "answer": "I could not find that information in the available knowledge base.",
+    "found": false,
+    "passed": true
+  },
+  {
+    "question": "What will the weather be in Cape Town tomorrow?",
+    "category": "Unanswerable",
+    "expected": [
+      "(fallback message)"
+    ],
+    "retrieved": [
+      "https://www.zaio.io/events/zaio-open-day-capetown",
+      "https://www.zaio.io/events/zaio-open-day-durban",
+      "https://www.zaio.io/locations/cape-town",
+      "Student Handbook - Page 7"
+    ],
+    "source": null,
+    "sources": [],
+    "answer": "I could not find that information in the available knowledge base.",
+    "found": false,
+    "passed": true
   }
 ]
