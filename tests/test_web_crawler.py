@@ -99,7 +99,8 @@ def test_crawler_follows_internal_links_and_respects_rules():
     site = {
         "/": _html('<p>Home page text</p><a href="/courses">c</a><a href="/admin">a</a>'
                    '<a href="https://other.test/x">ext</a><a href="/blog/post-1">b</a>'
-                   '<a href="/brochure.pdf">pdf</a>'),
+                   '<a href="/brochure.pdf">pdf</a><a href="/prospectus/print">print</a>'),
+        "/prospectus/print": _html("<p>Print edition duplicate</p>"),
         "/about": _html("<p>About us text</p>"),
         "/courses": _html("<p>Courses text</p>"),
         "/admin": _html("<p>Secret admin</p>"),

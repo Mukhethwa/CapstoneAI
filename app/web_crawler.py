@@ -165,6 +165,8 @@ class WebsiteCrawler:
             return False
         if not self.include_blog and re.match(r"^/blog/.+", parsed.path):
             return False
+        if re.search(r"/print$", parsed.path):
+            return False  # print editions duplicate content that exists on other pages
         return self.robots.can_fetch(USER_AGENT, url)
 
     def crawl(self) -> list[WebPage]:

@@ -12,7 +12,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 load_dotenv(PROJECT_ROOT / ".env")
 
-NOT_FOUND_MESSAGE = "I don't know. That information is not available in the handbook."
+NOT_FOUND_MESSAGE = "I could not find that information in the available knowledge base."
 
 
 def _env(name: str, default: str) -> str:
@@ -35,14 +35,14 @@ class Settings:
     chroma_dir: Path = field(
         default_factory=lambda: Path(_env("CHROMA_DIR", str(PROJECT_ROOT / "chroma_db")))
     )
-    collection_name: str = field(default_factory=lambda: _env("COLLECTION_NAME", "handbook"))
+    collection_name: str = field(default_factory=lambda: _env("COLLECTION_NAME", "knowledge_base"))
     embedding_model: str = field(
         default_factory=lambda: _env("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
     )
     chunk_size: int = field(default_factory=lambda: int(_env("CHUNK_SIZE", "800")))
     chunk_overlap: int = field(default_factory=lambda: int(_env("CHUNK_OVERLAP", "150")))
-    top_k: int = field(default_factory=lambda: int(_env("TOP_K", "4")))
-    min_similarity: float = field(default_factory=lambda: float(_env("MIN_SIMILARITY", "0.25")))
+    top_k: int = field(default_factory=lambda: int(_env("TOP_K", "6")))
+    min_similarity: float = field(default_factory=lambda: float(_env("MIN_SIMILARITY", "0.3")))
     gemini_api_key: str = field(default_factory=lambda: _env("GEMINI_API_KEY", ""))
     gemini_model: str = field(default_factory=lambda: _env("GEMINI_MODEL", "gemini-3.5-flash-lite"))
 

@@ -1,12 +1,15 @@
-"""Part 1: load the handbook PDF, extract and clean its text, and split it into chunks."""
+"""Load the handbook PDF, clean its text, and split handbook and website content into chunks."""
 
 from __future__ import annotations
 
+import hashlib
 import re
 from dataclasses import dataclass
 from pathlib import Path
 
 from pypdf import PdfReader
+
+from app.web_crawler import WebPage
 
 
 @dataclass(frozen=True)
@@ -15,11 +18,29 @@ class Page:
     text: str
 
 
+HANDBOOK = "handbook"
+WEBSITE = "website"
+
+
 @dataclass(frozen=True)
 class Chunk:
     id: str
     text: str
-    page: int
+    source: str = HANDBOOK  # HANDBOOK or WEBSITE
+    page: int | None = None  # handbook page number
+    url: str | None = None  # website page URL
+    title: str | None = None  # website page title
+
+    @property
+    def label(self) -> str:
+        """Human readable citation, e.g. 'Student Handbook - Page 18' or a URL."""
+        return source_label(self.source, self.page, self.url)
+
+
+def source_label(source: str, page: int | None, url: str | None) -> str:
+    if source == WEBSITE and url:
+        return url
+    return f"Student Handbook - Page {page}" if page is not None else "Student Handbook"
 
 
 _SPACED_CAPS = re.compile(r"\b(?:[A-Z] ){2,}[A-Z]\b")  # "E X C I T I N G" -> "EXCITING"
@@ -111,5 +132,29 @@ def chunk_pages(pages: list[Page], chunk_size: int = 800, chunk_overlap: int = 1
     chunks = []
     for page in pages:
         for i, text in enumerate(split_text(page.text, chunk_size, chunk_overlap)):
-            chunks.append(Chunk(id=f"page-{page.number}-chunk-{i}", text=text, page=page.number))
+            chunks.append(
+                Chunk(id=f"handbook-p{page.number}-c{i}", text=text, source=HANDBOOK, page=page.number)
+            )
+    return chunks
+
+
+def chunk_web_pages(
+    pages: list[WebPage], chunk_size: int = 800, chunk_overlap: int = 150
+) -> list[Chunk]:
+    """Chunk each website page; every chunk starts with its page title for context."""
+    chunks = []
+    for page in pages:
+        url_id = hashlib.sha1(page.url.encode()).hexdigest()[:12]
+        body_size = max(chunk_size - len(page.title) - 1, chunk_size // 2)
+        overlap = min(chunk_overlap, body_size - 1)
+        for i, text in enumerate(split_text(page.text, body_size, overlap)):
+            chunks.append(
+                Chunk(
+                    id=f"web-{url_id}-c{i}",
+                    text=f"{page.title}\n{text}" if page.title else text,
+                    source=WEBSITE,
+                    url=page.url,
+                    title=page.title,
+                )
+            )
     return chunks
