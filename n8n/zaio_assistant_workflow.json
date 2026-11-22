@@ -1,0 +1,219 @@
+{
+  "id": "zaioAssistant001",
+  "name": "ZAIO Knowledge Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi! Ask me anything about ZAIO or the Full-Stack AI Engineer Bootcamp handbook.",
+        "options": {
+          "responseMode": "lastNode",
+          "title": "ZAIO Knowledge Assistant",
+          "subtitle": "Answers from the Student Handbook and zaio.io"
+        }
+      },
+      "id": "8c1f5a52-6f0e-4a35-9d0a-1f2b9e7c1a01",
+      "name": "Chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "5f8b1c3e-2a47-4d6b-8e91-7c0d3a4b5e61"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/ask",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ question: $json.chatInput }) }}",
+        "options": {
+          "timeout": 120000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "8c1f5a52-6f0e-4a35-9d0a-1f2b9e7c1a02",
+      "name": "Ask RAG API (chat)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        0
+      ],
+      "notes": "POST /ask on the FastAPI service. If n8n runs in Docker use http://host.docker.internal:8000/ask",
+      "notesInFlow": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c2d4e6f8-1a3b-4c5d-8e7f-901a2b3c4d01",
+              "name": "output",
+              "value": "={{ $json.answer ? $json.answer + ($json.source ? '\\n\\nSource: ' + $json.source : '') : 'Sorry, the assistant is unavailable right now (' + (($json.error ? ($json.error.message || $json.error) : null) || 'no response') + ').' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8c1f5a52-6f0e-4a35-9d0a-1f2b9e7c1a03",
+      "name": "Reply in chat",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://discord.com/api/webhooks/REPLACE_WITH_YOUR_WEBHOOK",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: '**Q:** ' + $('Chat message received').item.json.chatInput + '\\n**A:** ' + $json.output }) }}",
+        "options": {}
+      },
+      "id": "8c1f5a52-6f0e-4a35-9d0a-1f2b9e7c1a04",
+      "name": "Forward to Discord (optional)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        0
+      ],
+      "disabled": true,
+      "notes": "Enable and paste a Discord channel webhook URL to also post every Q&A to Discord.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "zaio-ask",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "8c1f5a52-6f0e-4a35-9d0a-1f2b9e7c1a05",
+      "name": "Webhook question received",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        260
+      ],
+      "webhookId": "b7e2d9a4-3c18-4f5e-a6b0-2d9c8e1f4a72"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/ask",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ question: $json.body.question }) }}",
+        "options": {
+          "timeout": 120000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "8c1f5a52-6f0e-4a35-9d0a-1f2b9e7c1a06",
+      "name": "Ask RAG API (webhook)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        260
+      ],
+      "onError": "continueRegularOutput",
+      "notes": "POST /ask on the FastAPI service. If n8n runs in Docker use http://host.docker.internal:8000/ask",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ question: $('Webhook question received').item.json.body.question || null, answer: $json.answer || null, source: $json.source || null, sources: $json.sources || [], found: $json.found === true, error: ($json.error ? ($json.error.message || $json.error) : null) }) }}",
+        "options": {}
+      },
+      "id": "8c1f5a52-6f0e-4a35-9d0a-1f2b9e7c1a07",
+      "name": "Respond to webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        260
+      ]
+    }
+  ],
+  "connections": {
+    "Chat message received": {
+      "main": [
+        [
+          {
+            "node": "Ask RAG API (chat)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ask RAG API (chat)": {
+      "main": [
+        [
+          {
+            "node": "Reply in chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply in chat": {
+      "main": [
+        [
+          {
+            "node": "Forward to Discord (optional)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook question received": {
+      "main": [
+        [
+          {
+            "node": "Ask RAG API (webhook)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ask RAG API (webhook)": {
+      "main": [
+        [
+          {
+            "node": "Respond to webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}
